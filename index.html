@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Departmental Health & Safety Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS Variables for a clean, consistent color scheme */
+        :root {
+            --primary-color: #3b82f6; /* A shade of blue for primary actions */
+            --secondary-color: #6b7280; /* A shade of gray for secondary actions */
+            --border-color: #e5e7eb; /* A light gray for borders and separators */
+            --background-color: #f9fafb; /* A subtle off-white background */
+            --card-bg: #ffffff; /* White background for content cards */
+            --accent-color: #f59e0b; /* A yellow for alerts and highlights */
+            --error-color: #ef4444; /* A shade of red for errors */
+        }
+        
+        body {
+            background-color: var(--background-color);
+        }
+
+        /* Custom styles for the signature pad */
+        #signature-pad {
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            cursor: crosshair;
+            transition: border-color 0.2s;
+        }
+
+        /* Focus and hover states for inputs and buttons */
+        input:focus, select:focus, textarea:focus, #signature-pad:focus-within {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
+
+        /* Custom class for form validation to give clear visual feedback */
+        .is-invalid {
+            border-color: var(--error-color) !important;
+            box-shadow: 0 0 0 1px var(--error-color) !important;
+        }
+
+        /* Styling for the checklist item cards */
+        .checklist-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto; /* Number, Item, Response */
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item-details {
+            grid-column: 1 / -1; /* Full width for comments */
+            margin-top: 0.5rem;
+        }
+        
+        /* Custom radio button styles for YES/NO/N/A */
+        .segmented-control {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: 9999px; /* Tailwind's rounded-full */
+            overflow: hidden;
+        }
+
+        .segmented-control input[type="radio"] {
+            display: none;
+        }
+        
+        .segmented-control label {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem; /* Tailwind's text-sm */
+            font-weight: 500;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        
+        .segmented-control input[type="radio"]:checked + label {
+            color: #fff;
+        }
+        
+        .segmented-control input[type="radio"][value="YES"]:checked + label {
+            background-color: #22c55e; /* Tailwind's bg-green-500 */
+        }
+        
+        .segmented-control input[type="radio"][value="NO"]:checked + label {
+            background-color: var(--error-color); /* bg-red-500 */
+        }
+        
+        .segmented-control input[type="radio"][value="N/A"]:checked + label {
+            background-color: var(--secondary-color); /* bg-gray-600 */
+        }
+
+        /* Print styles to ensure the form looks good when printed */
+        @media print {
+            body {
+                background: none;
+                color: black;
+            }
+            .max-w-5xl {
+                max-width: none;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none;
+            }
+            .checklist-item {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+            }
+            .checklist-item-details {
+                grid-column: 1 / -1;
+            }
+            .segmented-control {
+                border: 1px solid black;
+            }
+            .segmented-control label {
+                padding: 0.25rem 0.5rem;
+                color: black;
+            }
+            .segmented-control input[type="radio"]:checked + label {
+                background-color: #e5e7eb; /* a light gray for print */
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <div class="max-w-5xl mx-auto my-8 p-8 bg-white shadow-xl rounded-2xl">
+        
+        <header class="flex flex-col md:flex-row items-center justify-between pb-6 mb-6 border-b border-gray-200">
+            <img src="logo.png" alt="Company Logo" class="h-14 mb-4 md:mb-0">
+            <h1 class="text-3xl font-extrabold text-gray-800 text-center md:text-right leading-tight">
+                Daily Departmental<br>Health & Safety Checklist
+            </h1>
+        </header>
+
+        <p class="text-sm text-gray-600 mb-8">
+            This document outlines the inspection criteria used during daily departmental health and safety checks. It is designed to ensure safe working conditions, legal compliance, and prompt reporting of any issues.
+        </p>
+        
+        <form id="safetyChecklistForm" novalidate>
+            
+            <section class="mb-8">
+                <h2 class="text-xl font-bold text-gray-700 mb-4">1. Inspection Details</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-2">
+                        <label for="department" class="block text-sm font-semibold text-gray-700 mb-1">Department</label>
+                        <input type="text" id="department" name="department" class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 transition" required onchange="updatePPEGuidance()">
+                    </div>
+                    <div>
+                        <label for="date" class="block text-sm font-semibold text-gray-700 mb-1">Date</label>
+                        <input type="date" id="date" name="date" class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 transition" required>
+                    </div>
+                    <div>
+                        <label for="datetime" class="block text-sm font-semibold text-gray-700 mb-1">Time</label>
+                        <input type="time" id="datetime" name="datetime" class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 transition" required>
+                    </div>
+                </div>
+            </section>
+            
+            <div id="ppe-guidance" class="mb-8 p-4 rounded-lg bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 hidden" role="alert">
+                <p class="font-bold">Required PPE for this department:</p>
+                <ul id="ppe-list" class="list-disc list-inside mt-2 text-sm"></ul>
+            </div>
+
+            <section class="mb-8">
+                <h2 class="text-xl font-bold text-gray-700 mb-4">2. Checklist Items</h2>
+                <div class="bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="checklist-item" data-item-id="item1">
+                        <div class="font-bold text-gray-600">1.</div>
+                        <div class="font-medium text-gray-800">Are emergency exits clear and free from obstruction?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item1-yes" name="item1-response" value="YES" required>
+                            <label for="item1-yes">YES</label>
+                            <input type="radio" id="item1-no" name="item1-response" value="NO" required>
+                            <label for="item1-no">NO</label>
+                            <input type="radio" id="item1-na" name="item1-response" value="N/A" required>
+                            <label for="item1-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment1" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item2">
+                        <div class="font-bold text-gray-600">2.</div>
+                        <div class="font-medium text-gray-800">Are fire extinguishers, MCPs, and first aid boxes visible and accessible?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item2-yes" name="item2-response" value="YES" required>
+                            <label for="item2-yes">YES</label>
+                            <input type="radio" id="item2-no" name="item2-response" value="NO" required>
+                            <label for="item2-no">NO</label>
+                            <input type="radio" id="item2-na" name="item2-response" value="N/A" required>
+                            <label for="item2-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment2" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item3">
+                        <div class="font-bold text-gray-600">3.</div>
+                        <div class="font-medium text-gray-800">Is a trained first aider/fire warden available on all shifts?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item3-yes" name="item3-response" value="YES" required>
+                            <label for="item3-yes">YES</label>
+                            <input type="radio" id="item3-no" name="item3-response" value="NO" required>
+                            <label for="item3-no">NO</label>
+                            <input type="radio" id="item3-na" name="item3-response" value="N/A" required>
+                            <label for="item3-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment3" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item4">
+                        <div class="font-bold text-gray-600">4.</div>
+                        <div class="font-medium text-gray-800">Work areas are clean & tidy. Regular housekeeping performed.</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item4-yes" name="item4-response" value="YES" required>
+                            <label for="item4-yes">YES</label>
+                            <input type="radio" id="item4-no" name="item4-response" value="NO" required>
+                            <label for="item4-no">NO</label>
+                            <input type="radio" id="item4-na" name="item4-response" value="N/A" required>
+                            <label for="item4-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment4" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item5">
+                        <div class="font-bold text-gray-600">5.</div>
+                        <div class="font-medium text-gray-800">Are floors dry and free from slip/trip hazards?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item5-yes" name="item5-response" value="YES" required>
+                            <label for="item5-yes">YES</label>
+                            <input type="radio" id="item5-no" name="item5-response" value="NO" required>
+                            <label for="item5-no">NO</label>
+                            <input type="radio" id="item5-na" name="item5-response" value="N/A" required>
+                            <label for="item5-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment5" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item6">
+                        <div class="font-bold text-gray-600">6.</div>
+                        <div class="font-medium text-gray-800">Is lighting adequate in all areas?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item6-yes" name="item6-response" value="YES" required>
+                            <label for="item6-yes">YES</label>
+                            <input type="radio" id="item6-no" name="item6-response" value="NO" required>
+                            <label for="item6-no">NO</label>
+                            <input type="radio" id="item6-na" name="item6-response" value="N/A" required>
+                            <label for="item6-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment6" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item7">
+                        <div class="font-bold text-gray-600">7.</div>
+                        <div class="font-medium text-gray-800">Is all equipment in safe working condition?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item7-yes" name="item7-response" value="YES" required>
+                            <label for="item7-yes">YES</label>
+                            <input type="radio" id="item7-no" name="item7-response" value="NO" required>
+                            <label for="item7-no">NO</label>
+                            <input type="radio" id="item7-na" name="item7-response" value="N/A" required>
+                            <label for="item7-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment7" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item8">
+                        <div class="font-bold text-gray-600">8.</div>
+                        <div class="font-medium text-gray-800">Is damaged equipment reported and tagged as ‘Defective’?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item8-yes" name="item8-response" value="YES" required>
+                            <label for="item8-yes">YES</label>
+                            <input type="radio" id="item8-no" name="item8-response" value="NO" required>
+                            <label for="item8-no">NO</label>
+                            <input type="radio" id="item8-na" name="item8-response" value="N/A" required>
+                            <label for="item8-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment8" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item9">
+                        <div class="font-bold text-gray-600">9.</div>
+                        <div class="font-medium text-gray-800">Is electrical equipment free from visible damage?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item9-yes" name="item9-response" value="YES" required>
+                            <label for="item9-yes">YES</label>
+                            <input type="radio" id="item9-no" name="item9-response" value="NO" required>
+                            <label for="item9-no">NO</label>
+                            <input type="radio" id="item9-na" name="item9-response" value="N/A" required>
+                            <label for="item9-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment9" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item10">
+                        <div class="font-bold text-gray-600">10.</div>
+                        <div class="font-medium text-gray-800">Are sockets not overloaded, extension cords, or trailing cables on the floor?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item10-yes" name="item10-response" value="YES" required>
+                            <label for="item10-yes">YES</label>
+                            <input type="radio" id="item10-no" name="item10-response" value="NO" required>
+                            <label for="item10-no">NO</label>
+                            <input type="radio" id="item10-na" name="item10-response" value="N/A" required>
+                            <label for="item10-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment10" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item11">
+                        <div class="font-bold text-gray-600">11.</div>
+                        <div class="font-medium text-gray-800">Is electrical equipment turned off when not in use?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item11-yes" name="item11-response" value="YES" required>
+                            <label for="item11-yes">YES</label>
+                            <input type="radio" id="item11-no" name="item11-response" value="NO" required>
+                            <label for="item11-no">NO</label>
+                            <input type="radio" id="item11-na" name="item11-response" value="N/A" required>
+                            <label for="item11-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment11" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item12">
+                        <div class="font-bold text-gray-600">12.</div>
+                        <div class="font-medium text-gray-800">Are racking and shelving in good condition with no visible damage?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item12-yes" name="item12-response" value="YES" required>
+                            <label for="item12-yes">YES</label>
+                            <input type="radio" id="item12-no" name="item12-response" value="NO" required>
+                            <label for="item12-no">NO</label>
+                            <input type="radio" id="item12-na" name="item12-response" value="N/A" required>
+                            <label for="item12-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment12" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item13">
+                        <div class="font-bold text-gray-600">13.</div>
+                        <div class="font-medium text-gray-800">Are materials stored securely without obstructing walkways?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item13-yes" name="item13-response" value="YES" required>
+                            <label for="item13-yes">YES</label>
+                            <input type="radio" id="item13-no" name="item13-response" value="NO" required>
+                            <label for="item13-no">NO</label>
+                            <input type="radio" id="item13-na" name="item13-response" value="N/A" required>
+                            <label for="item13-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment13" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item14">
+                        <div class="font-bold text-gray-600">14.</div>
+                        <div class="font-medium text-gray-800">Is a daily safety briefing conducted?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item14-yes" name="item14-response" value="YES" required>
+                            <label for="item14-yes">YES</label>
+                            <input type="radio" id="item14-no" name="item14-response" value="NO" required>
+                            <label for="item14-no">NO</label>
+                            <input type="radio" id="item14-na" name="item14-response" value="N/A" required>
+                            <label for="item14-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment14" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item15">
+                        <div class="font-bold text-gray-600">15.</div>
+                        <div class="font-medium text-gray-800">Is all required PPE worn by staff (e.g., gloves, masks, safety shoes)?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item15-yes" name="item15-response" value="YES" required>
+                            <label for="item15-yes">YES</label>
+                            <input type="radio" id="item15-no" name="item15-response" value="NO" required>
+                            <label for="item15-no">NO</label>
+                            <input type="radio" id="item15-na" name="item15-response" value="N/A" required>
+                            <label for="item15-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment15" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                    <div class="checklist-item" data-item-id="item16">
+                        <div class="font-bold text-gray-600">16.</div>
+                        <div class="font-medium text-gray-800">Are incidents, near misses, or hazards reported?</div>
+                        <div class="segmented-control">
+                            <input type="radio" id="item16-yes" name="item16-response" value="YES" required>
+                            <label for="item16-yes">YES</label>
+                            <input type="radio" id="item16-no" name="item16-response" value="NO" required>
+                            <label for="item16-no">NO</label>
+                            <input type="radio" id="item16-na" name="item16-response" value="N/A" required>
+                            <label for="item16-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details"><textarea class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment16" placeholder="Add comments here..."></textarea></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="text-xl font-bold text-gray-700 mb-4">3. Inspector's Sign-off</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="manager-name" class="block text-sm font-semibold text-gray-700 mb-1">Department Manager Name</label>
+                        <input type="text" id="manager-name" name="manager-name" class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 transition" required>
+                    </div>
+                    <div>
+                        <label for="inspector-name" class="block text-sm font-semibold text-gray-700 mb-1">Inspector's Name</label>
+                        <input type="text" id="inspector-name" name="inspector-name" class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 transition" required>
+                    </div>
+                </div>
+                <div class="relative p-6 border border-gray-200 rounded-lg">
+                    <label for="signature-pad" class="absolute -top-3 left-3 bg-white px-2 text-sm font-semibold text-gray-700">Inspector's Signature</label>
+                    <canvas id="signature-pad" class="w-full h-40 rounded-lg"></canvas>
+                    <button type="button" id="clear-signature" class="mt-4 inline-block bg-gray-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg hover:bg-gray-600 transition">Clear Signature</button>
+                    <input type="hidden" id="inspector-signature" name="inspector-signature" required>
+                </div>
+            </section>
+
+            <p class="mt-8 text-sm text-red-600">
+                <span class="font-bold">Important:</span> Any major concerns identified (items marked "NO") must be escalated to the relevant personnel (e.g., Operations Manager, Maintenance, Health & Safety) immediately.
+            </p>
+            
+            <div class="flex space-x-4 mt-8">
+                <button type="submit" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Submit Form</button>
+                <button type="button" id="print-form" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition no-print">Print Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script>
+        // --- JavaScript logic for form functionality ---
+
+        // Data structure for dynamic PPE guidance
+        const ppeData = {
+            "Dry Store": ["Safety Shoes", "Hi-Viz Jacket"],
+            "Kitchen": ["Safety Shoes", "Hair Net", "Chef's Jacket", "Apron"],
+            "Warehouse": ["Safety Shoes", "Hard Hat", "Hi-Viz Jacket"],
+            "Maintenance": ["Safety Shoes", "Hard Hat", "Ear Plugs", "Safety Goggles"],
+            "Office": ["N/A - General Office Environment"],
+            "Aviation": ["Safety Shoes", "Ear Plugs", "Hi-Viz Vest"],
+            // Add more departments and their required PPE here
+        };
+
+        // Function to update the PPE guidance based on department input
+        function updatePPEGuidance() {
+            const department = document.getElementById('department').value.trim();
+            const ppeGuidanceDiv = document.getElementById('ppe-guidance');
+            const ppeListUl = document.getElementById('ppe-list');
+            
+            ppeListUl.innerHTML = ''; // Clear previous list
+            
+            if (ppeData[department]) {
+                ppeData[department].forEach(ppe => {
+                    const li = document.createElement('li');
+                    li.textContent = ppe;
+                    ppeListUl.appendChild(li);
+                });
+                ppeGuidanceDiv.classList.remove('hidden');
+            } else {
+                ppeGuidanceDiv.classList.add('hidden');
+            }
+        }
+
+        // Wait for the DOM to be fully loaded before running scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('safetyChecklistForm');
+            const canvas = document.getElementById('signature-pad');
+            const signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)' // Set background color
+            });
+            const clearButton = document.getElementById('clear-signature');
+            const printButton = document.getElementById('print-form');
+
+            // Function to resize the canvas correctly for different screens
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+                signaturePad.clear(); // Clear signature on resize to prevent distortion
+            }
+
+            // Event listeners for window resize and clearing the signature
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            clearButton.addEventListener('click', () => signaturePad.clear());
+            printButton.addEventListener('click', () => window.print());
+
+            // Listen for changes on the department input to update PPE guidance
+            document.getElementById('department').addEventListener('change', updatePPEGuidance);
+            
+            // Form submission logic
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Reset all validation styles
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                
+                let allFieldsValid = true;
+
+                // Validate main input fields
+                const requiredFields = ['department', 'manager-name', 'supervisor', 'date', 'datetime', 'inspector-name'];
+                requiredFields.forEach(id => {
+                    const field = document.getElementById(id);
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        allFieldsValid = false;
+                    }
+                });
+
+                // Validate signature pad
+                if (signaturePad.isEmpty()) {
+                    canvas.classList.add('is-invalid');
+                    allFieldsValid = false;
+                } else {
+                    document.getElementById('inspector-signature').value = signaturePad.toDataURL();
+                }
+
+                // Validate all checklist response groups
+                const checklistItems = form.querySelectorAll('.checklist-item');
+                checklistItems.forEach(item => {
+                    const responseGroup = item.querySelector('.segmented-control');
+                    const isChecked = item.querySelector(`input[name="${item.dataset.itemId}-response"]:checked`);
+                    
+                    if (!isChecked) {
+                        responseGroup.classList.add('is-invalid');
+                        allFieldsValid = false;
+                    } else {
+                        responseGroup.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!allFieldsValid) {
+                    alert("Please fill out all required fields and checklist items before submitting.");
+                    return;
+                }
+
+                // Collect data for submission and potential escalation
+                const formData = new FormData(form);
+                const escalationData = {
+                    department: formData.get('department'),
+                    date: formData.get('date'),
+                    inspector: formData.get('inspector-name'),
+                    concerns: []
+                };
+
+                // Identify and collect "NO" responses for escalation
+                checklistItems.forEach(item => {
+                    const selectedResponse = item.querySelector(`input[name="${item.dataset.itemId}-response"]:checked`);
+                    if (selectedResponse && selectedResponse.value === 'NO') {
+                        const itemText = item.querySelector('.font-medium').innerText;
+                        const commentText = item.querySelector('textarea').value;
+                        escalationData.concerns.push({
+                            item: itemText,
+                            comment: commentText || 'No comment provided'
+                        });
+                    }
+                });
+                
+                // Simulating form submission and escalation
+                console.log("Form submitted successfully!");
+                console.log("Form Data:", Object.fromEntries(formData));
+
+                if (escalationData.concerns.length > 0) {
+                    console.log("Major concerns detected. Escalating...");
+                    console.log("Escalation Data:", escalationData);
+                    alert("Form submitted with concerns. Relevant personnel have been notified.");
+                } else {
+                    alert("Form submitted successfully!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
