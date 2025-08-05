@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Health & Safety Checklist Submission</title>
+    <style>
+        table, td, div, h1, p {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        body {
+            margin:0;
+            padding:0;
+            word-spacing:normal;
+            background-color:#f5f8fa;
+        }
+        h1, h2 {
+            margin: 0;
+            color: #1a202c;
+        }
+        p {
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            background-color: #ffffff;
+        }
+        .header {
+            background-color: #ffff;
+            padding: 30px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .info-row {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.5;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #777777;
+        }
+        .checklist-item {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .checklist-response {
+            font-weight: 600;
+            color: #555555;
+        }
+        .checklist-comment {
+            font-style: italic;
+            color: #777777;
+            margin-top: 6px;
+        }
+        .positive-response {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .negative-response {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .concern-card {
+            background-color: #fff8f8;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .concern-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #fecaca;
+            padding-bottom: 8px;
+        }
+        .concern-item {
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 4px;
+        }
+        .signature-box {
+            margin-top: 24px;
+            border: 1px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+        .footer {
+            padding: 20px 30px;
+            text-align: center;
+            background-color: #f5f8fa;
+        }
+        .footer p {
+            font-size: 12px;
+            color: #999999;
+        }
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+            .content {
+                padding: 20px !important;
+            }
+        }
+        .header .logo {
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div role="article" aria-roledescription="email" lang="en">
+        <table role="presentation" style="width:100%;border-spacing:0;" bgcolor="#f5f8fa">
+            <tr>
+                <td align="center" style="padding:0;">
+                    <table role="presentation" class="container" style="width:100%;border-spacing:0;">
+                        <tr>
+                            <td class="header" style="background-color:#ffff;padding:30px;text-align:center;">
+                                <table role="presentation" width="100%" style="border-spacing:0;">
+                                    <tr>
+                                        <td style="text-align:left; vertical-align:middle;">
+                                        </td>
+                                        <td style="text-align:right; vertical-align:middle;">
+                                            <h1 style="font-size:20px;line-height:24px;font-weight:bold;color:#1a202c;margin:0;">DO & CO Health & Safety<br>Checklist Submission</h1>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td style="padding-top: 0; padding-bottom: 0;">
+                            <div style="border-bottom: 1px solid #e2e8f0; margin-left: 30px; margin-right: 30px;"></div>
+                          </td>
+                        </tr>
+
+                        <tr>
+                            <td class="content">
+                                <p style="margin-bottom:20px;font-size:16px;line-height:24px;color:#333333;">Hello,</p>
+                                <p style="margin-bottom:20px;font-size:16px;line-height:24px;color:#333333;">A new health and safety checklist has been submitted. Please find the details below.</p>
+                                
+                                <table role="presentation" style="width:100%;border-spacing:0;">
+                                    <tr>
+                                        <td>
+                                            <div class="card">
+                                                <h2 class="card-header">Inspection Details</h2>
+                                                <table role="presentation" width="100%" style="border-spacing:0;">
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Department:</span> {{department}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Date:</span> {{date}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Time:</span> {{time}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table role="presentation" style="width:100%;border-spacing:0;">
+                                    <tr>
+                                        <td>
+                                            <div class="card">
+                                                <h2 class="card-header">Checklist Items</h2>
+                                                <pre style="white-space:pre-wrap;font-size:14px;color:#333333;">{{checklistItems}}</pre>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table role="presentation" style="width:100%;border-spacing:0;">
+                                    <tr>
+                                        <td>
+                                            <div class="concern-card">
+                                                <h2 class="concern-header">Escalation Concerns</h2>
+                                                <pre style="white-space:pre-wrap;font-size:14px;color:#dc3545;">{{concerns}}</pre>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table role="presentation" style="width:100%;border-spacing:0;">
+                                    <tr>
+                                        <td>
+                                            <div class="card">
+                                                <h2 class="card-header">Inspector's Sign-off</h2>
+                                                <table role="presentation" width="100%" style="border-spacing:0;">
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Inspector:</span> {{inspectorName}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Inspector Email:</span> {{inspectorEmail}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="info-row">
+                                                            <span class="info-label">Manager:</span> {{managerName}}
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div class="signature-box">
+                                                    <img src="{{inspectorSignature}}" alt="Inspector Signature" style="max-width:100%;height:auto;display:block;margin:0 auto;border:0;">
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p style="text-align: left; margin-top: 20px; font-size: 16px; line-height: 24px; color: #333333;">Thanks,<br>Elroy</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="footer">
+                                <p>Keeping things safe, one checklist at a time...</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
