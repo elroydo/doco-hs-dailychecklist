@@ -123,6 +123,30 @@
             /* bg-gray-600 */
         }
 
+        /* Styles for disabled button */
+        .disabled-btn {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Print styles to ensure the form looks good when printed */
         @media print {
             body {
@@ -166,7 +190,7 @@
     </style>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function () {
+        (function() {
             emailjs.init({
                 publicKey: "UpVAE8xvGXfqw314Q",
             });
@@ -266,6 +290,10 @@
                             <input type="radio" id="item3-na" name="item3-response" value="N/A" required>
                             <label for="item3-na">N/A</label>
                         </div>
+                        <div class="checklist-item-details hidden" id="item3-conditional">
+                            <label for="first-aider-name" class="block text-sm font-semibold text-gray-700 mb-1">Full Name of First Aider/Fire Warden</label>
+                            <input type="text" id="first-aider-name" name="firstAiderName" class="w-full rounded-md border-gray-300 p-2 text-sm" placeholder="Enter full name of First Aider/Fire Warden" required>
+                        </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment3"
                                 placeholder="Add comments here..."></textarea></div>
@@ -282,6 +310,10 @@
                             <input type="radio" id="item4-na" name="item4-response" value="N/A" required>
                             <label for="item4-na">N/A</label>
                         </div>
+                        <div class="checklist-item-details hidden" id="item4-conditional">
+                            <label for="work-area-timing" class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
+                            <input type="time" id="work-area-timing" name="workAreaTiming" class="w-full rounded-md border-gray-300 p-2 text-sm" required>
+                        </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment4"
                                 placeholder="Add comments here..."></textarea></div>
@@ -296,6 +328,10 @@
                             <label for="item5-no">NO</label>
                             <input type="radio" id="item5-na" name="item5-response" value="N/A" required>
                             <label for="item5-na">N/A</label>
+                        </div>
+                        <div class="checklist-item-details hidden" id="item5-conditional">
+                            <label for="floors-timing" class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
+                            <input type="time" id="floors-timing" name="floorsTiming" class="w-full rounded-md border-gray-300 p-2 text-sm" required>
                         </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment5"
@@ -333,7 +369,7 @@
                     </div>
                     <div class="checklist-item" data-item-id="item8">
                         <div class="font-bold text-gray-600">8.</div>
-                        <div class="font-medium text-gray-800">Is damaged equipment reported and tagged as ‘Defective’?
+                        <div class="font-medium text-gray-800">Is damaged equipment reported and quarantined?
                         </div>
                         <div class="segmented-control">
                             <input type="radio" id="item8-yes" name="item8-response" value="YES" required>
@@ -519,184 +555,23 @@
             <p class="mt-8 text-sm text-red-600">
                 <span class="font-bold">Important:</span> Any major concerns identified (items marked "NO") must be
                 escalated to the relevant personnel (e.g., Operations Manager, Maintenance, Health & Safety)
-                immediately.
+                and/or corrected immediately.
             </p>
 
             <div class="flex space-x-4 mt-8">
-                <button type="submit"
-                    class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Submit
-                    Form</button>
+                <button type="submit" id="submit-button"
+                    class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                    Submit Form
+                </button>
                 <button type="button" id="print-form"
-                    class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition no-print"
+                    class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition no-print disabled-btn"
                     disabled>Print Form</button>
             </div>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script>
-        // --- JavaScript logic for form functionality ---
-
-        // Wait for the DOM to be fully loaded before running scripts
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('safetyChecklistForm');
-            const canvas = document.getElementById('signature-pad');
-            const signaturePad = new SignaturePad(canvas, {
-                backgroundColor: 'rgb(255, 255, 255)' // Set background color
-            });
-            const clearButton = document.getElementById('clear-signature');
-            const printButton = document.getElementById('print-form');
-
-            // Pre-populate date and time fields
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            const day = now.getDate().toString().padStart(2, '0');
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-
-            document.getElementById('date').value = `${year}-${month}-${day}`;
-            document.getElementById('datetime').value = `${hours}:${minutes}`;
-
-            // Function to resize the canvas correctly for different screens
-            function resizeCanvas() {
-                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                canvas.width = canvas.offsetWidth * ratio;
-                canvas.height = canvas.offsetHeight * ratio;
-                canvas.getContext("2d").scale(ratio, ratio);
-                signaturePad.clear(); // Clear signature on resize to prevent distortion
-            }
-
-            // Event listeners for window resize and clearing the signature
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            clearButton.addEventListener('click', () => {
-                signaturePad.clear();
-                document.getElementById('signature-pad').classList.remove('is-invalid');
-                document.getElementById('signature-error').classList.add('hidden');
-            });
-            printButton.addEventListener('click', () => window.print());
-
-            // Form submission logic
-            form.addEventListener('submit', (event) => {
-                event.preventDefault(); // Prevent default form submission
-
-                // Reset all validation styles
-                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-                document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
-
-                let allFieldsValid = true;
-
-                // Validate main input fields and show error messages
-                const requiredInputFields = ['department', 'date', 'datetime', 'manager-name', 'inspector-name', 'inspector-email'];
-                requiredInputFields.forEach(id => {
-                    const field = document.getElementById(id);
-                    if (!field.value.trim()) {
-                        field.classList.add('is-invalid');
-                        document.getElementById(`${id}-error`).classList.remove('hidden');
-                        allFieldsValid = false;
-                    }
-                });
-
-                // Validate signature pad
-                if (signaturePad.isEmpty()) {
-                    canvas.classList.add('is-invalid');
-                    document.getElementById('signature-error').classList.remove('hidden');
-                    allFieldsValid = false;
-                } else {
-                    document.getElementById('inspector-signature').value = signaturePad.toDataURL();
-                }
-
-                // Validate all checklist response groups
-                const checklistItems = form.querySelectorAll('.checklist-item');
-                checklistItems.forEach(item => {
-                    const responseGroup = item.querySelector('.segmented-control');
-                    const isChecked = item.querySelector(`input[name="${item.dataset.itemId}-response"]:checked`);
-
-                    if (!isChecked) {
-                        responseGroup.classList.add('is-invalid');
-                        allFieldsValid = false;
-                    } else {
-                        responseGroup.classList.remove('is-invalid');
-                    }
-                });
-
-                if (!allFieldsValid) {
-                    // Stop submission if validation fails
-                    return;
-                }
-
-                // Prepare data for EmailJS submission
-                const formData = new FormData(form);
-                const emailParams = {
-                    department: formData.get('department'),
-                    date: formData.get('date'),
-                    time: formData.get('datetime'),
-                    managerName: formData.get('managerName'),
-                    inspectorName: formData.get('inspectorName'),
-                    inspectorEmail: formData.get('inspectorEmail'),
-                    inspectorSignature: formData.get('inspectorSignature'),
-                    checklistItems: [],
-                    concerns: []
-                };
-
-                // Collect checklist items and concerns into arrays of objects
-                checklistItems.forEach((item, index) => {
-                    const itemNumber = index + 1;
-                    const itemText = item.querySelector('.font-medium').innerText;
-                    const response = item.querySelector(`input[name="item${itemNumber}-response"]:checked`);
-                    const comment = item.querySelector(`textarea[name="comment${itemNumber}"]`).value;
-
-                    const checklistItem = {
-                        itemNumber: itemNumber,
-                        itemText: itemText,
-                        itemResponse: response ? response.value : 'N/A',
-                        comment: comment || ''
-                    };
-                    emailParams.checklistItems.push(checklistItem);
-
-                    if (response && response.value === 'NO') {
-                        emailParams.concerns.push({
-                            item: itemText,
-                            comment: comment || 'No comment provided'
-                        });
-                    }
-                });
-
-                // --- ADD THIS: Convert arrays to formatted strings ---
-                emailParams.checklistItems = emailParams.checklistItems.map(item =>
-                    `#${item.itemNumber}: ${item.itemText}\nResponse: ${item.itemResponse}\nComment: ${item.comment}\n`
-                ).join('\n');
-
-                emailParams.concerns = emailParams.concerns.map(concern =>
-                    `Item: ${concern.item}\nComment: ${concern.comment}\n`
-                ).join('\n');
-
-                // Send email using EmailJS
-                emailjs.send("service_n3kiw5g", "template_3i1mc4g", emailParams)
-                    .then(function (response) {
-                        console.log("Email sent successfully!", response.status, response.text);
-                        console.log("Form submitted successfully!");
-                        console.log("Form Data:", Object.fromEntries(formData));
-
-                        // Enable the print button after successful submission
-                        printButton.disabled = false;
-
-                        if (emailParams.concerns.length > 0) {
-                            console.log("Major concerns detected. Escalating...");
-                            console.log("Escalation Data:", emailParams.concerns);
-                            alert("Form submitted with concerns. Relevant personnel have been notified. You can now print a copy of the form.");
-                        } else {
-                            alert("Form submitted successfully! You can now print a copy of the form.");
-                        }
-                    }, function (error) {
-                        console.error("Email failed to send:", error);
-                        alert("Form submission failed. Please try again.");
-                    });
-            });
-        });
-    </script>
+    <script src="form.js"></script>
 </body>
 
 </html>
