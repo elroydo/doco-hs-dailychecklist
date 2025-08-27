@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clear-signature');
     const printButton = document.getElementById('print-form');
     const submitButton = document.getElementById('submit-button');
+    const submitButtonText = document.getElementById('submit-button-text'); // New
+    const loadingSpinner = document.getElementById('loading-spinner'); // New
+
 
     // Pre-populate date and time fields
     const now = new Date();
@@ -149,8 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set loading state on the button
         submitButton.disabled = true;
-        submitButton.innerHTML = '<div class="loading-spinner"></div>Submitting...';
-        submitButton.classList.add('disabled-btn');
+        submitButton.classList.add('disabled-btn', 'flex', 'justify-center', 'items-center'); // Added flexbox classes
+        submitButtonText.innerText = 'Submitting...'; // New: Update text
+        loadingSpinner.classList.remove('hidden'); // New: Show spinner
+
 
         // Prepare data for EmailJS submission
         const formData = new FormData(form);
@@ -227,8 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Re-enable the button and update text
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Submit Form';
-                submitButton.classList.remove('disabled-btn');
+                submitButton.classList.remove('disabled-btn', 'flex', 'justify-center', 'items-center'); // Removed flexbox classes
+                submitButtonText.innerText = 'Submit Form'; // New: Restore text
+                loadingSpinner.classList.add('hidden'); // New: Hide spinner
 
                 // Enable the print button after successful submission
                 printButton.disabled = false;
@@ -246,8 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Re-enable the button and update text on failure
                 submitButton.disabled = false;
-                submitButton.innerHTML = 'Submit Form';
-                submitButton.classList.remove('disabled-btn');
+                submitButton.classList.remove('disabled-btn', 'flex', 'justify-center', 'items-center'); // Removed flexbox classes
+                submitButtonText.innerText = 'Submit Form'; // New: Restore text
+                loadingSpinner.classList.add('hidden'); // New: Hide spinner
 
                 alert("Form submission failed. Please try again.");
             });
