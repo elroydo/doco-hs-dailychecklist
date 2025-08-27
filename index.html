@@ -188,14 +188,6 @@
             }
         }
     </style>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            emailjs.init({
-                publicKey: "UpVAE8xvGXfqw314Q",
-            });
-        })();
-    </script>
 </head>
 
 <body class="font-sans antialiased text-gray-800">
@@ -291,8 +283,11 @@
                             <label for="item3-na">N/A</label>
                         </div>
                         <div class="checklist-item-details hidden" id="item3-conditional">
-                            <label for="first-aider-name" class="block text-sm font-semibold text-gray-700 mb-1">Full Name of First Aider/Fire Warden</label>
-                            <input type="text" id="first-aider-name" name="firstAiderName" class="w-full rounded-md border-gray-300 p-2 text-sm" placeholder="Enter full name of First Aider/Fire Warden" required>
+                            <label for="first-aider-name"
+                                class="block text-sm font-semibold text-gray-700 mb-1">Full Name of First Aider/Fire
+                                Warden</label>
+                            <input type="text" id="first-aider-name" name="firstAiderName"
+                                class="w-full rounded-md border-gray-300 p-2 text-sm" required>
                         </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment3"
@@ -311,8 +306,10 @@
                             <label for="item4-na">N/A</label>
                         </div>
                         <div class="checklist-item-details hidden" id="item4-conditional">
-                            <label for="work-area-timing" class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
-                            <input type="time" id="work-area-timing" name="workAreaTiming" class="w-full rounded-md border-gray-300 p-2 text-sm" required>
+                            <label for="work-area-timing"
+                                class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
+                            <input type="time" id="work-area-timing" name="workAreaTiming"
+                                class="w-full rounded-md border-gray-300 p-2 text-sm" required>
                         </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment4"
@@ -330,8 +327,10 @@
                             <label for="item5-na">N/A</label>
                         </div>
                         <div class="checklist-item-details hidden" id="item5-conditional">
-                            <label for="floors-timing" class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
-                            <input type="time" id="floors-timing" name="floorsTiming" class="w-full rounded-md border-gray-300 p-2 text-sm" required>
+                            <label for="floors-timing"
+                                class="block text-sm font-semibold text-gray-700 mb-1">Timing of Checks</label>
+                            <input type="time" id="floors-timing" name="floorsTiming"
+                                class="w-full rounded-md border-gray-300 p-2 text-sm" required>
                         </div>
                         <div class="checklist-item-details"><textarea
                                 class="w-full rounded-md border-gray-300 p-2 text-sm" rows="2" name="comment5"
@@ -571,6 +570,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init({
+                publicKey: "UpVAE8xvGXfqw314Q",
+            });
+        })();
+    </script>
     <script src="form.js"></script>
 </body>
 

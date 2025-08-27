@@ -171,16 +171,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemNumber = index + 1;
             const itemText = item.querySelector('.font-medium').innerText;
             const response = item.querySelector(`input[name="item${itemNumber}-response"]:checked`);
-            const comment = item.querySelector(`textarea[name="comment${itemNumber}"]`).value;
+            
+            // Safely get the comment value, defaulting to an empty string if the element is not found
+            const commentEl = item.querySelector(`textarea[name="comment${itemNumber}"]`);
+            const comment = commentEl ? commentEl.value : '';
 
             let details = '';
             if (response && response.value === 'YES') {
                 if (itemNumber === 3) {
-                    const firstAiderName = item.querySelector('input[name="firstAiderName"]').value;
-                    if (firstAiderName) details = `\nFull Name: ${firstAiderName}`;
-                } else if (itemNumber === 4 || itemNumber === 5) {
-                    const timing = item.querySelector(`input[name="${item.dataset.itemId.toLowerCase().replace('item', '')}Timing"]`).value;
-                    if (timing) details = `\nTiming: ${timing}`;
+                    const firstAiderNameEl = document.getElementById('first-aider-name');
+                    if (firstAiderNameEl) details = `\nFull Name: ${firstAiderNameEl.value}`;
+                } else if (itemNumber === 4) {
+                    const timingEl = document.getElementById('work-area-timing');
+                    if (timingEl) details = `\nTiming: ${timingEl.value}`;
+                } else if (itemNumber === 5) {
+                    const timingEl = document.getElementById('floors-timing');
+                    if (timingEl) details = `\nTiming: ${timingEl.value}`;
                 }
             }
 
@@ -194,9 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
             emailParams.checklistItems.push(checklistItem);
 
             if (response && response.value === 'NO') {
+                const commentEl = item.querySelector(`textarea[name="comment${itemNumber}"]`);
+                const comment = commentEl ? commentEl.value : 'No comment provided';
                 emailParams.concerns.push({
                     item: itemText,
-                    comment: comment || 'No comment provided'
+                    comment: comment
                 });
             }
         });
@@ -235,12 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, function(error) {
                 console.error("Email failed to send:", error);
-                
+
                 // Re-enable the button and update text on failure
                 submitButton.disabled = false;
                 submitButton.innerHTML = 'Submit Form';
                 submitButton.classList.remove('disabled-btn');
-                
+
                 alert("Form submission failed. Please try again.");
             });
     });
