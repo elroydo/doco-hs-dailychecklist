@@ -86,6 +86,14 @@
             text-indent: 0;
         }
 
+        /* Remove default appearance for date/time inputs on mobile */
+        input[type="date"],
+        input[type="time"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
         /* Custom radio button styles for YES/NO/N/A with animations */
         .segmented-control {
             display: flex;
@@ -109,6 +117,13 @@
             z-index: 1;
             color: #6b7280;
             white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .segmented-control label {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem; /* 14px */
+            }
         }
 
         .segmented-control input[type="radio"]:checked+label {
@@ -399,7 +414,7 @@
                                 </div>
                             </div>
                             <div id="item3-conditional"
-                                class="form-field mt-4 transition-all duration-300 ease-in-out hidden">
+                                class="conditional-field form-field mt-4 transition-all duration-300 ease-in-out hidden">
                                 <input type="text" id="fire-marshal-name" name="fireMarshalName" placeholder=" "
                                     class="w-full rounded-xl border-2 border-gray-300 p-4 text-base focus:border-blue-700 transition">
                                 <label for="fire-marshal-name">Fire Marshal Name</label>
@@ -430,7 +445,7 @@
                                 </div>
                             </div>
                             <div id="item4-conditional"
-                                class="form-field mt-4 transition-all duration-300 ease-in-out hidden">
+                                class="conditional-field form-field mt-4 transition-all duration-300 ease-in-out hidden">
                                 <input type="time" id="work-area-timing" name="workAreaTiming" placeholder=" "
                                     class="w-full rounded-xl border-2 border-gray-300 p-4 text-base focus:border-blue-700 transition">
                                 <label for="work-area-timing">Time Checked</label>
@@ -460,7 +475,7 @@
                                 </div>
                             </div>
                             <div id="item5-conditional"
-                                class="form-field mt-4 transition-all duration-300 ease-in-out hidden">
+                                class="conditional-field form-field mt-4 transition-all duration-300 ease-in-out hidden">
                                 <input type="time" id="floors-timing" name="floorsTiming" placeholder=" "
                                     class="w-full rounded-xl border-2 border-gray-300 p-4 text-base focus:border-blue-700 transition">
                                 <label for="floors-timing">Time Checked</label>
@@ -668,7 +683,7 @@
                         <canvas id="signature-pad" class="w-full h-48 rounded-xl bg-white"></canvas>
                         <div id="signature-error" class="error-message text-center">A signature is required.</div>
                         <button type="button" id="clear-signature"
-                            class="mt-4 px-4 py-2 rounded-full font-semibold text-sm transition-colors text-white bg-gray-500 hover:bg-gray-600">Clear
+                            class="mt-4 px-4 py-2 text-sm rounded-full font-semibold transition-colors btn-secondary">Clear
                             Signature</button>
                         <input type="hidden" id="inspector-signature" name="inspectorSignature" required>
                     </div>
@@ -680,18 +695,18 @@
                     and/or corrected immediately.
                 </p>
 
-                <div class="mt-8 flex justify-center items-center gap-4">
-                    <button type="button" id="reset-button" class="btn btn-secondary min-w-[150px]">
+                <div class="mt-8 flex justify-center items-center gap-4 flex-wrap">
+                    <button type="button" id="reset-button" class="btn btn-secondary">
                         Reset Form
                     </button>
-                    <button type="submit" id="submit-button" class="btn btn-primary min-w-[200px]">
+                    <button type="submit" id="submit-button" class="btn btn-primary ">
                         <span id="submit-button-text">Submit Form</span>
                         <div id="loading-spinner" class="loading-spinner ml-4 hidden"></div>
                     </button>
                 </div>
             </form>
         </div>
-        <div style="border-top:1px solid #e0e0e0;margin-top:28px;padding-top:20px;">
+        <div style="margin-top:28px">
             <p style="text-align:center;font-size:12px;color:#999;margin:0;font-style:italic;">Keeping things safe, one checklist at a time.</p>
             <p style="text-align:center;font-size:11px;color:#999;margin:4px 0 0 0;">Elroy - DOCOHSDDC v0.3</p>
         </div>
@@ -943,3 +958,4 @@
 </body>
 
 </html>
+
